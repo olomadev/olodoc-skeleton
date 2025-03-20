@@ -39,7 +39,9 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     //
     // routes
     // 
-    $middlewares = [];
+    $middlewares = [
+        Olodoc\Middleware\SetVersionMiddleware::class,
+    ];
     $app->route('/search', App\Handler\SearchHandler::class, ['GET']);
     $app->route('/', [...$middlewares, ...[App\Handler\DocumentHandler::class]], ['GET'], $docManager::INDEX_DEFAULT);
     $app->route('/index.html', [...$middlewares, ...[App\Handler\DocumentHandler::class]], ['GET'], $docManager::INDEX_DEFAULT_INDEX);

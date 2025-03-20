@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use Laminas\ServiceManager\Factory\FactoryInterface;
+use Olodoc\DocumentManagerInterface;
 use Psr\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class SetLocaleMiddlewareFactory implements FactoryInterface
@@ -14,7 +15,8 @@ class SetLocaleMiddlewareFactory implements FactoryInterface
     {
         return new SetLocaleMiddleware(
             $container->get('config'),
-            $container->get(Translator::class)
+            $container->get(Translator::class),
+            $container->get(DocumentManagerInterface::class)
         );
     }
 }

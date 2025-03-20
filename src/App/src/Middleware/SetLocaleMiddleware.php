@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use Olodoc\DocumentManagerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -14,7 +15,6 @@ use Laminas\Diactoros\Response\RedirectResponse;
 class SetLocaleMiddleware implements MiddlewareInterface
 {
     protected $config;
-    protected $translator;
 
     /**
      * Constructor
@@ -24,10 +24,10 @@ class SetLocaleMiddleware implements MiddlewareInterface
      */
     public function __construct(
         array $config, 
-        TranslatorInterface $translator
+        private TranslatorInterface $translator,
+        private DocumentManagerInterface $documentManager,
     )
     {
-        $this->translator = $translator;
         $this->config = $config['olodoc'];
     }
 
@@ -62,6 +62,8 @@ class SetLocaleMiddleware implements MiddlewareInterface
 
         define('LANG_ID', $locale);
         define('BASE_URL', ($locale == "en") ? HTTP_PREFIX.REQUEST_ORIGIN : HTTP_PREFIX.$locale.".".REQUEST_ORIGIN);
+
+        $this->documentManager->setLocale($locale);
 
         return $handler->handle($request);
     }
